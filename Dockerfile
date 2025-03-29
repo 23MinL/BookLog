@@ -5,7 +5,7 @@ FROM openjdk:17-alpine
 WORKDIR /app
 
 # JAR 복사 및 빌드
-COPY target/BookLog.jar /app/BookLog.jar
+COPY target/*.jar /app/BookLog.jar
 
 # 환경변수 파일 추가 (.env 파일 별도 관리 권장)
 COPY src/main/resources/.env /app/.env
