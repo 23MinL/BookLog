@@ -1,5 +1,5 @@
 # === Stage 1: Build (Maven 빌드 단계) ===
-FROM maven:3.9.0-openjdk-17 AS builder
+FROM maven:3.9.0-eclipse-temurin-17 AS builder
 WORKDIR /app
 
 # 필요한 파일 먼저 복사 (캐싱 활용을 위해 pom.xml과 mvnw 먼저 복사)
@@ -17,7 +17,7 @@ RUN ./mvnw clean package -DskipTests
 FROM openjdk:17-alpine
 WORKDIR /app
 
-# 빌드 단계에서 생성된 JAR 파일 복사 (와일드카드를 이용하여 이름 상관없이 복사)
+# 빌드 단계에서 생성된 JAR 파일 복사 (와일드카드로 복사)
 COPY --from=builder /app/target/*.jar /app/BookLog.jar
 
 # 환경변수 파일 복사
