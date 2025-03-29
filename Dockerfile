@@ -1,26 +1,22 @@
-# === Stage 1: Build (Maven 빌드 단계) ===
+# === Stage 1: Maven Build ===
 FROM maven:3.9.0-eclipse-temurin-17 AS builder
 WORKDIR /app
 
-# pom.xml과 mvnw만 복사 (캐싱)
+# pom.xml 먼저 복사 후 의존성 캐싱
 COPY pom.xml .
-COPY mvnw .
-RUN chmod +x mvnw
+RUN mvn dependency:go-offline
 
-# 전체 프로젝트 소스코드 복사
-COPY . .
+# 전체 소스 코드 복사 (mvnw 제외!)
+COPY src ./src
 
-# 👇 핵심 수정사항: 여기서 .mvn 삭제 (프로젝트 복사 후 삭제!)
-RUN rm -rf .mvn
+# Maven으로 직접 빌드 (mvnw 대신 mvn 명령 사용)
+RUN mvn clean package -DskipTests
 
-# Maven 빌드 실행 (명시적 로컬 리포지토리 경로)
-RUN ./mvnw clean package -DskipTests -Dmaven.repo.local=/tmp/.m2/repository
-
-# === Stage 2: Run (실행 단계) ===
+# === Stage 2: Run Application ===
 FROM openjdk:17-alpine
 WORKDIR /app
 
-# 빌드된 JAR 파일 복사
+# 생성된 JAR 파일을 복사
 COPY --from=builder /app/target/*.jar /app/BookLog.jar
 
 # 환경변수 파일 복사
