@@ -1,18 +1,30 @@
-# Base 이미지 설정 (Java 17 사용)
-FROM openjdk:17-alpine
-
-# 작업 디렉토리 설정
+# === Stage 1: Build (Maven 빌드 단계) ===
+FROM maven:3.9.0-openjdk-17 AS builder
 WORKDIR /app
 
-# JAR 복사 및 빌드
-COPY target/*.jar /app/BookLog.jar
+# 필요한 파일 먼저 복사 (캐싱 활용을 위해 pom.xml과 mvnw 먼저 복사)
+COPY pom.xml .
+COPY mvnw .
+RUN chmod +x mvnw
 
-# 환경변수 파일 추가 (.env 파일 별도 관리 권장)
+# 전체 소스 코드 복사
+COPY . .
+
+# Maven 빌드 실행 (테스트 생략)
+RUN ./mvnw clean package -DskipTests
+
+# === Stage 2: Run (실행 단계) ===
+FROM openjdk:17-alpine
+WORKDIR /app
+
+# 빌드 단계에서 생성된 JAR 파일 복사 (와일드카드를 이용하여 이름 상관없이 복사)
+COPY --from=builder /app/target/*.jar /app/BookLog.jar
+
+# 환경변수 파일 복사
 COPY src/main/resources/.env /app/.env
-
-# 컨테이너 실행 시점의 명령어
-ENTRYPOINT ["java","-jar","BookLog.jar"]
-
 
 # 외부에 노출할 포트 설정
 EXPOSE 8080
+
+# 컨테이너 시작 시 애플리케이션 실행
+ENTRYPOINT ["java", "-jar", "BookLog.jar"]
