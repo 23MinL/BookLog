@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://dpg-cvk0bo15pdvs73a0h21g-a.singapore-postgres.render.com:5432/booklog_z8lg?sslmode=require
+    username: booklog_z8lg_user
+    password: cBc9OoSZcvhYui2waas49FsttprtfPvT
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+
+aladin:
+  api-key: ${ALADIN_API_KEY}
+  api-url: http://www.aladin.co.kr/ttb/api/ItemSearch.aspx

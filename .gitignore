@@ -11,6 +11,7 @@ target/
 *.iws
 *.iml
 *.ipr
+*.log
 
 ### Eclipse ###
 .apt_generated
@@ -36,3 +37,13 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+## 환경변수 및 중요 설정 파일
+src/main/resources/.env
+src/main/resources/application.yml
+src/main/resources/application.properties
+logs/
+*.log
+
+## Docker
+docker-compose.override.yml
