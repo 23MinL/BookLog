@@ -40,6 +40,8 @@ build/
 
 ## 환경변수 및 중요 설정 파일
 src/main/resources/.env
+.env
+
 src/main/resources/application.yml
 src/main/resources/application.properties
 logs/

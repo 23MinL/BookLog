@@ -19,9 +19,6 @@ WORKDIR /app
 # 생성된 JAR 파일을 복사
 COPY --from=builder /app/target/*.jar /app/BookLog.jar
 
-# 환경변수 파일 복사
-COPY src/main/resources/.env /app/.env
-
 # 포트 노출
 EXPOSE 8080
 
