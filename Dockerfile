@@ -10,7 +10,7 @@ RUN mvn dependency:go-offline
 COPY src ./src
 
 # Maven으로 직접 빌드 (mvnw 대신 mvn 명령 사용)
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests spring-boot:repackage
 
 # === Stage 2: Run Application ===
 FROM openjdk:17-alpine
