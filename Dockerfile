@@ -2,18 +2,18 @@
 FROM maven:3.9.0-eclipse-temurin-17 AS builder
 WORKDIR /app
 
-# 먼저 pom.xml, mvnw 복사 (의존성 캐싱)
+# pom.xml과 mvnw만 복사 (캐싱)
 COPY pom.xml .
 COPY mvnw .
 RUN chmod +x mvnw
 
-# .mvn 폴더를 완전히 제거 (중요!)
-RUN rm -rf .mvn
-
-# 전체 프로젝트 복사
+# 전체 프로젝트 소스코드 복사
 COPY . .
 
-# Maven 빌드 실행 (명시적으로 로컬 리포지토리 경로 지정하여 오류 방지)
+# 👇 핵심 수정사항: 여기서 .mvn 삭제 (프로젝트 복사 후 삭제!)
+RUN rm -rf .mvn
+
+# Maven 빌드 실행 (명시적 로컬 리포지토리 경로)
 RUN ./mvnw clean package -DskipTests -Dmaven.repo.local=/tmp/.m2/repository
 
 # === Stage 2: Run (실행 단계) ===
